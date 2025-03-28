@@ -1,0 +1,8 @@
+{
+    "name": "FAQ Detection Dev",
+    "image": "mcr.microsoft.com/devcontainers/python:3.9",
+    "postCreateCommand": "pip install -r requirements.txt",
+    "features": {
+      "github-cli": "latest"
+    }
+}
