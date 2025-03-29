@@ -1,4 +1,0 @@
-faq_data = {
-    "How do I contribute?": "You can contribute by forking the repository, making your changes, and opening a pull request.",
-    "How do I report bugs?": "Please open an issue and follow the issue template."
-}
