@@ -1,13 +1,10 @@
 from flask import Flask, request, jsonify
-import openai
+from sentence_transformers import SentenceTransformer
 import numpy as np
 from numpy.linalg import norm 
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
 app = Flask(__name__)
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 faq_data = {
     "How do I contribute?": "You can contribute by forking the repository, making your changes, and opening a pull request.",
@@ -15,26 +12,17 @@ faq_data = {
     "Where can I find the documentation?": "See the README and Wiki pages."
 }
 
-faq_embeddings = {}
-
-for question in faq_data:
-    response = openai.embeddings.create(
-        input = question,
-        model = 'text-embedding-3-small'
-    )
-    faq_embeddings[question] = response.data[0].embedding
+faq_embeddings = {
+    question: model.encode(question)
+    for question in faq_data
+}
 
 def cos_sim(a, b):
     return np.dot(a, b) / (norm(a) * norm(b))
 
 def match_faq_semantic(incoming_q):
     # Getting embeddings from the incoming questions
-    for question in incoming_q:
-        response = openai.embeddings.create(
-            input = question,
-            model = 'text-embedding-3-small'
-        )
-        question_embedding = response.data[0].embedding
+    question_embedding = model.encode(incoming_q)
     
     #Compare to each existing FAQ
     best_match = None
