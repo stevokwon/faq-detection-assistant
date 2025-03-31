@@ -30,11 +30,12 @@ def match_faq_semantic(incoming_q):
 
     for stored_q, stored_embedding in faq_embeddings.items():
         score = cos_sim(question_embedding, stored_embedding)
+        print(f"🔎 Similarity score with '{stored_q}' : {score:.3f}")
         if score > highest_score:
             highest_score = score
             best_match = stored_q
 
-    if highest_score > 0.80:
+    if highest_score > 0.65:
         return faq_data[best_match]
     else:
         return None
